@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>api</title>
+</head>
+<body>
+    <select name="" id="users">
+     
+    </select>
+    <h2>Details</h2>
+    <div>
+      <p>Name: <span id="name"></span></p>
+      <p>Email: <span id="email"></span></p>
+      <p>Role: <span id="role"></span></p>
+      </div>
+      <div>
+        <h3>Add user</h3>
+        <form id="form1">
+            <input type="text" placeholder="Enter name" name="" id="username">
+            <input type="text" placeholder="Enter email" name="" id="useremail">
+            <input type="text" placeholder="Enter role" name="" id="userrole">
+            <input type="password" placeholder="Enter password" name="" id="userpassword">
+            <input type="submit" value="Add">
+            <!-- <button type="submit">Add</button> -->
+        </form>
+    </div>
+    <script
+  src="https://code.jquery.com/jquery-1.12.4.js"
+  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
+  crossorigin="anonymous"></script> 
+  <script>
+      
+$(document).ready(function(){
+$.ajax({
+url: "http://127.0.0.1:8000/api/users",
+success: function(result) {
+    var users =result.data;
+$.each(users, function (){
+$("#users").append($("<option  />").val(this.id).text(this.name));
+});
+}
+});
+})
+
+  </script>
+  <script>
+  
+  
+    
+    
+    $(document).ready(function(){
+    $('#users').change(function() {
+    
+    var $option=$(this).find('option:selected');
+    var value=$option.val();
+    var text = $option.text();
+    $.ajax({
+    url: "http://127.0.0.1:8000/api/users/"+value,
+    success: function(result) {
+    var users = result.data;
+    $("#name").text(users.name);
+    $("#email").text(users.email);
+    $("#role").text(users.userrole);
+   
+    
+    }
+    });
+    });
+    })
+    
+    </script>
+    <script>
+      $(document).ready(function () {
+          $("#form1").submit(function (event) {
+              
+              var formdata = {
+                  name:$("#username").val(),
+                  email:$("#useremail").val(),
+                  userrole:$("#userrole").val(),
+                  password:$("#userpassword").val()
+              };
+            //    console.log(formdata);
+              $.ajax({
+                  type: "POST",
+                  url: "http://127.0.0.1:8000/api/store-users/",
+                  data: formdata,
+                  dataType: "json",
+                  success: function (response) {
+                      console.log(response);
+                  }
+              });
+          });
+      })
+  </script>
+</body>
+
+</html>
